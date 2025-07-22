@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_dir/open_dir.dart';
+import 'package:vscode_extension_downloader/Widgets/DownloadStatus.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,6 +76,21 @@ class _MyHomePageState extends State<MyHomePage> {
   bool validateVersion(String version) {
     final regex = RegExp(r'^\d+\.\d+\.\d+$');
     return regex.hasMatch(version);
+  }
+
+  void checkFields() {
+    if (publisher.isEmpty || name.isEmpty || version.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Please fill in all fields.')));
+      return;
+    }
+    if (!validateVersion(version)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid version format. Use x.x.x')),
+      );
+      return;
+    }
   }
 
   Future<void> downloadExtension(
@@ -227,22 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (publisher.isEmpty ||
-                          name.isEmpty ||
-                          version.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Please fill in all fields.')),
-                        );
-                        return;
-                      }
-                      if (!validateVersion(version)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Invalid version format. Use x.x.x'),
-                          ),
-                        );
-                        return;
-                      }
+                      checkFields();
                       final result = await showDownloadConfirmationDialog(
                         context,
                         publisher,
@@ -270,13 +271,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             const SizedBox(height: 24),
-            if (downloadTask != null) ...[
-              Text('Download Status: ${taskStatus?.name ?? 'Unknown'}'),
-              const SizedBox(height: 8),
-              LinearProgressIndicator(value: progress),
-              const SizedBox(height: 8),
-              Text('Progress: ${(progress * 100).toStringAsFixed(2)}%'),
-            ],
+            if (downloadTask != null)
+              Downloadstatus(taskStatus: taskStatus, progress: progress),
           ],
         ),
       ),
