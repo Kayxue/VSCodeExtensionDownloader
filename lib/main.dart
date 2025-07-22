@@ -3,7 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_dir/open_dir.dart';
-import 'package:vscode_extension_downloader/Widgets/DownloadStatus.dart';
+import 'Widgets/DownloadStatus.dart';
 
 void main() {
   runApp(const MyApp());
