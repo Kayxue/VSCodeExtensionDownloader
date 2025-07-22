@@ -186,13 +186,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: () async {
-                    String? directory = await FilePicker.platform
-                        .getDirectoryPath();
-                    if (directory != null) {
-                      _controller.text = directory;
-                    }
-                  },
+                  onPressed: taskStatus == TaskStatus.running
+                      ? null
+                      : () async {
+                          String? directory = await FilePicker.platform
+                              .getDirectoryPath();
+                          if (directory != null) {
+                            _controller.text = directory;
+                          }
+                        },
                   child: Text('Choose Folder'),
                 ),
               ],
@@ -209,6 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (value) => setState(() {
                       publisher = value;
                     }),
+                    readOnly: taskStatus == TaskStatus.running,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -221,6 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (value) => setState(() {
                       name = value;
                     }),
+                    readOnly: taskStatus == TaskStatus.running,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -233,6 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (value) => setState(() {
                       version = value;
                     }),
+                    readOnly: taskStatus == TaskStatus.running,
                   ),
                 ),
               ],
@@ -242,23 +247,26 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () async {
-                      checkFields();
-                      final confirmResult = await showDownloadConfirmationDialog(
-                        context,
-                        publisher,
-                        name,
-                        version,
-                      );
-                      if (confirmResult) {
-                        await downloadExtension(
-                          publisher,
-                          name,
-                          version,
-                          _controller.text,
-                        );
-                      }
-                    },
+                    onPressed: taskStatus == TaskStatus.running
+                        ? null
+                        : () async {
+                            checkFields();
+                            final confirmResult =
+                                await showDownloadConfirmationDialog(
+                                  context,
+                                  publisher,
+                                  name,
+                                  version,
+                                );
+                            if (confirmResult) {
+                              await downloadExtension(
+                                publisher,
+                                name,
+                                version,
+                                _controller.text,
+                              );
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                     ),
