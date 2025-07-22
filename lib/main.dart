@@ -244,13 +244,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ElevatedButton(
                     onPressed: () async {
                       checkFields();
-                      final result = await showDownloadConfirmationDialog(
+                      final confirmResult = await showDownloadConfirmationDialog(
                         context,
                         publisher,
                         name,
                         version,
                       );
-                      if (result) {
+                      if (confirmResult) {
                         await downloadExtension(
                           publisher,
                           name,
