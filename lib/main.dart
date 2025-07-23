@@ -1,8 +1,7 @@
 import 'package:background_downloader/background_downloader.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:open_dir/open_dir.dart';
+import 'package:vscode_extension_downloader/Widgets/Inputs.dart';
 import 'Widgets/DownloadStatus.dart';
 
 void main() {
@@ -73,13 +72,31 @@ class _MyHomePageState extends State<MyHomePage> {
     ).then((value) => value ?? false);
   }
 
+  void setPublisher(String value) {
+    setState(() {
+      publisher = value;
+    });
+  }
+
+  void setName(String value) {
+    setState(() {
+      name = value;
+    });
+  }
+
+  void setVersion(String value) {
+    setState(() {
+      version = value;
+    });
+  }
+
   bool validateVersion(String version) {
     final regex = RegExp(r'^\d+\.\d+\.\d+$');
     return regex.hasMatch(version);
   }
 
   void checkFields() {
-    if (publisher.isEmpty || name.isEmpty || version.isEmpty) {
+    if (publisher.isEmpty || name.isEmpty || version.isEmpty || _controller.text.isEmpty) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Please fill in all fields.')));
@@ -151,17 +168,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    getDownloadsDirectory().then((directory) {
-      if (directory == null) {
-        return;
-      }
-      _controller.text = directory.path;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -172,75 +178,15 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: EdgeInsets.only(top: 16, right: 16, left: 16),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Save to',
-                    ),
-                    controller: _controller,
-                    readOnly: true,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: taskStatus == TaskStatus.running
-                      ? null
-                      : () async {
-                          String? directory = await FilePicker.platform
-                              .getDirectoryPath();
-                          if (directory != null) {
-                            _controller.text = directory;
-                          }
-                        },
-                  child: Text('Choose Folder'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Publisher',
-                    ),
-                    onChanged: (value) => setState(() {
-                      publisher = value;
-                    }),
-                    readOnly: taskStatus == TaskStatus.running,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Name',
-                    ),
-                    onChanged: (value) => setState(() {
-                      name = value;
-                    }),
-                    readOnly: taskStatus == TaskStatus.running,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Version',
-                    ),
-                    onChanged: (value) => setState(() {
-                      version = value;
-                    }),
-                    readOnly: taskStatus == TaskStatus.running,
-                  ),
-                ),
-              ],
+            Inputs(
+              taskStatus: taskStatus,
+              publisher: publisher,
+              name: name,
+              version: version,
+              setPublisher: setPublisher,
+              setName: setName,
+              setVersion: setVersion,
+              controller: _controller,
             ),
             const SizedBox(height: 24),
             Row(
