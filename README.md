@@ -15,6 +15,7 @@ Because download button of extensions on [Visual Studio Marketplace](https://mar
 ![Publisher and Version](./publisher.webp)
 
 ![Version](./version.webp)
+
 3. Click `Download` button to download it.
 
 ## Contribution
