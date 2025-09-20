@@ -82,7 +82,7 @@ jobs:
       - name: 📦 Create macOS dmg
         if: matrix.platform == 'macos'
         run: |
-          hdiutil create -volname "${{ github.event.repository.name }}" -fs HFS+ -srcfolder "build/macos/Build/Products/Release/VSCode Extension Downloader.app" -ov -format UDRW -megabytes 500 "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.dmg"
+          hdiutil create -volname "${{ github.event.repository.name }}" -fs HFS+ -srcfolder "build/macos/Build/Products/Release/VSCode Extension Downloader.app" -ov -format UDZO "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.dmg"
         
       - name: ⬆️ Upload Artifacts for MacOS
         uses: actions/upload-artifact@v4
