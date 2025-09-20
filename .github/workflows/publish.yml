@@ -79,7 +79,7 @@ jobs:
           fi
         shell: bash
       
-            - name: 📦 Create macOS .dmg
+      - name: 📦 Create macOS dmg
         if: matrix.platform == 'macos'
         run: |
           mkdir dmgMake \
