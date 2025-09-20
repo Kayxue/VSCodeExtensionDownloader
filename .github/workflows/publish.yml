@@ -82,30 +82,40 @@ jobs:
       - name: 📦 Create macOS dmg
         if: matrix.platform == 'macos'
         run: |
-          mkdir dmgMake \
-          mv "build/macos/Build/Products/Release/*.app" dmgMake/ \
-          hdiutil create -volname "${{ github.event.repository.name }}" -fs HFS+ -srcfolder "dmgMake/" -ov -format UDRW -megabytes 500 ${{ github.event.repository.name }}.dmg
+          hdiutil create -volname "${{ github.event.repository.name }}" -fs HFS+ -srcfolder "build/macos/Build/Products/Release/VSCode Extension Downloader.app" -ov -format UDRW -megabytes 500 ${{ github.event.repository.name }}.dmg
         
       - name: ⬆️ Upload Artifacts for MacOS
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'macos'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: dmgMake/
+          path: ${{ github.event.repository.name }}.dmg
+      
+      - name: 📦 Compress folder for Linux
+        if: matrix.platform == 'linux'
+        run: |
+          zip -r -9 ${{ github.event.repository.name }}.zip build/${{ matrix.platform }}/${{ matrix.arch }}/release/bundle/
+        shell: bash
 
       - name: ⬆️ Upload Artifacts for Linux
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'linux'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: build/${{ matrix.platform }}/${{ matrix.arch }}/release/bundle/
+          path: ${{ github.event.repository.name }}.zip
+      
+      - name: 📦 Compress folder for Linux
+        if: matrix.platform == 'windows'
+        run: |
+          zip -r -9 ${{ github.event.repository.name }}.zip build/${{ matrix.platform }}/${{ matrix.arch }}/runner/Release/
+        shell: bash
 
       - name: ⬆️ Upload Artifacts for Windows
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'windows'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: build/${{ matrix.platform }}/${{ matrix.arch }}/runner/Release/
+          path: ${{ github.event.repository.name }}.zip
           
   create_release:
     name: Create GitHub Release
