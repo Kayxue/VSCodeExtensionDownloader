@@ -86,7 +86,7 @@ jobs:
       - name: ⬆️ Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.platform }}-${{ matrix.arch }}-build
+          name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
           path: build/${{ matrix.platform }}/
           
   create_release:
@@ -117,12 +117,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🚀 Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/*
+          draft: false
+          prerelease: false
+          tag_name: ${{ steps.release_notes.outputs.tag }}
+          name: Release ${{ steps.release_notes.outputs.name }}
+          body: ${{ steps.release_notes.outputs.body }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: >
-          gh release create ${{ steps.release_notes.outputs.tag }}
-          --title "Release ${{ steps.release_notes.outputs.name }}"
-          --notes "${{ steps.release_notes.outputs.body }}"
-          --draft=false
-          --prerelease=false
-          artifacts/*
