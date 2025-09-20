@@ -78,13 +78,20 @@ jobs:
             flutter build ${{ matrix.platform }} --release
           fi
         shell: bash
+      
+            - name: 📦 Create macOS .dmg
+        if: matrix.platform == 'macos'
+        run: |
+          mkdir dmgMake \
+          cp "build/macos/Build/Products/Release/${{ github.event.repository.name }}.app" dmgMake \
+          hdiutil create -volname "${{ github.event.repository.name }}" -ov -format UDRW -megabytes 500 ${{ github.event.repository.name }}.dmg
         
       - name: ⬆️ Upload Artifacts for MacOS
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'macos'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: build/${{ matrix.platform }}/Build/Products/Release/*.app
+          path: dmgMake/
 
       - name: ⬆️ Upload Artifacts for Linux
         uses: actions/upload-artifact@v4
@@ -116,8 +123,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts/
-        runs: |
-          ls -R artifacts/
       
       - name: 📝 Create release notes
         id: release_notes
