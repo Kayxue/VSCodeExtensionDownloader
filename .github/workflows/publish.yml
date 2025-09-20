@@ -9,7 +9,7 @@ on:
     # Trigger the workflow on pushes to the main branch
     # or when a new tag is pushed.
     branches:
-      - main
+      - master
     tags:
       - 'v*.*.*'
   # Allows you to run this workflow manually from the Actions tab.
