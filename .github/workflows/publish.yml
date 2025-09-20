@@ -40,9 +40,9 @@ jobs:
             arch: x64
             
           # Linux ARM64 (using a dedicated runner)
-          - os: ubuntu-24.04-arm
-            platform: linux
-            arch: arm64
+          # - os: ubuntu-24.04-arm
+          #   platform: linux
+          #   arch: arm64
     
     runs-on: ${{ matrix.os }}
 
@@ -54,7 +54,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: stable
+          # flutter-version: stable
           
       - name: ⚙️ Install dependencies and enable desktop support
         run: |
