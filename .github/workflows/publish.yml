@@ -103,12 +103,13 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
           path: ${{ github.event.repository.name }}.zip
-      
-      - name: 📦 Compress folder for Linux
+
+      - name: Compress folder for Windows
         if: matrix.platform == 'windows'
         run: |
-          zip -r -9 ${{ github.event.repository.name }}.zip build/${{ matrix.platform }}/${{ matrix.arch }}/runner/Release/
-        shell: bash
+          $source = "build/${{ matrix.platform }}/${{ matrix.arch }}/runner/Release/"
+          $destination = "${{ github.event.repository.name }}.zip"
+          Compress-Archive -Path $source -DestinationPath $destination
 
       - name: ⬆️ Upload Artifacts for Windows
         uses: actions/upload-artifact@v4
