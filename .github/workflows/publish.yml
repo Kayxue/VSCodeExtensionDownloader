@@ -1,7 +1,3 @@
-# This workflow automates the process of building a Flutter
-# desktop application for multiple platforms and architectures,
-# and then creates a new GitHub release with the built artifacts.
-
 name: Flutter Desktop Release
 
 on:
@@ -96,6 +92,13 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
           path: build/${{ matrix.platform }}/${{ matrix.arch }}/release/bundle/
+
+      - name: ⬆️ Upload Artifacts for Windows
+        uses: actions/upload-artifact@v4
+        if: matrix.platform == 'windows'
+        with:
+          name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
+          path: build/${{ matrix.platform }}/${{ matrix.arch }}/runner/Release/
           
   create_release:
     name: Create GitHub Release
@@ -128,7 +131,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/**/*
+          files: artifacts/*
           draft: false
           prerelease: false
           tag_name: ${{ steps.release_notes.outputs.tag }}
