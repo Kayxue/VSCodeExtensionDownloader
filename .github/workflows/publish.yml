@@ -83,11 +83,19 @@ jobs:
           fi
         shell: bash
         
-      - name: ⬆️ Upload Artifacts
+      - name: ⬆️ Upload Artifacts for MacOS
         uses: actions/upload-artifact@v4
+        if: matrix.platform == 'macos'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: build/
+          path: build/${{ matrix.platform }}/Build/Products/Release/*.app
+
+      - name: ⬆️ Upload Artifacts for Linux
+        uses: actions/upload-artifact@v4
+        if: matrix.platform == 'linux'
+        with:
+          name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
+          path: build/${{ matrix.platform }}/${{ matrix.arch }}/release/bundle/
           
   create_release:
     name: Create GitHub Release
@@ -120,7 +128,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/*
+          files: artifacts/**/*
           draft: false
           prerelease: false
           tag_name: ${{ steps.release_notes.outputs.tag }}

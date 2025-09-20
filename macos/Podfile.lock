@@ -2,6 +2,8 @@ PODS:
   - file_picker (0.0.1):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
+  - folder_permission_checker (0.0.1):
+    - FlutterMacOS
   - open_dir_macos (0.0.1):
     - FlutterMacOS
   - path_provider_foundation (0.0.1):
@@ -11,6 +13,7 @@ PODS:
 DEPENDENCIES:
   - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
+  - folder_permission_checker (from `Flutter/ephemeral/.symlinks/plugins/folder_permission_checker/macos`)
   - open_dir_macos (from `Flutter/ephemeral/.symlinks/plugins/open_dir_macos/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
 
@@ -19,6 +22,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
+  folder_permission_checker:
+    :path: Flutter/ephemeral/.symlinks/plugins/folder_permission_checker/macos
   open_dir_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/open_dir_macos/macos
   path_provider_foundation:
@@ -27,6 +32,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+  folder_permission_checker: 14be2c2dfa2d56f43ef749168ba80bf7c04d252a
   open_dir_macos: 79810d7921d777f8732bf6358b3a0839a8fad9b5
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
 
