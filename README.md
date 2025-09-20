@@ -20,3 +20,4 @@ Because download button of extensions on [Visual Studio Marketplace](https://mar
 
 ## Contribution
 Welcome to contribute to this project. Feel free to open an issue or submit a pull request.
+
