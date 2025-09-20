@@ -89,7 +89,7 @@ jobs:
         if: matrix.platform == 'macos'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: $${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.dmg
+          path: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.dmg
       
       - name: 📦 Compress folder for Linux
         if: matrix.platform == 'linux'
@@ -129,6 +129,11 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
       - name: ⬇️ Download all artifacts
         # Downloads all artifacts from the 'build' job.
         uses: actions/download-artifact@v4
@@ -141,7 +146,7 @@ jobs:
           echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
           echo "name=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
           echo "body=### What's new in this release" >> "$GITHUB_OUTPUT"
-          echo "body+=$(git log --pretty=format:'- %s' -n 1)" >> "$GITHUB_OUTPUT"
+          echo "body+=$(git log --pretty=format:'- %s' -n 5)" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
