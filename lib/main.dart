@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:open_dir/open_dir.dart';
 import 'package:vscode_extension_downloader/Widgets/Inputs.dart';
 import 'Widgets/DownloadStatus.dart';
+import 'package:folder_permission_checker/folder_permission_checker.dart';
 
-void main() {
+Future<void> main() async {
+  FolderPermissionChecker.init();
   runApp(const MyApp());
 }
 
@@ -96,7 +98,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void checkFields() {
-    if (publisher.isEmpty || name.isEmpty || version.isEmpty || _controller.text.isEmpty) {
+    if (publisher.isEmpty ||
+        name.isEmpty ||
+        version.isEmpty ||
+        _controller.text.isEmpty) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Please fill in all fields.')));
@@ -110,12 +115,51 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<bool> checkLocationPermission(String path) async {
+    final readonly = await FolderPermissionChecker.isReadonly(path);
+    if (!mounted) return false;
+    if (readonly) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'No write permission to the selected folder. Please choose another folder.',
+          ),
+        ),
+      );
+      return false;
+    }
+    final writable = await FolderPermissionChecker.isDirectoryWritable(path);
+    if (!mounted) return false;
+    if (!writable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'No write permission to the selected folder. Please choose another folder.',
+          ),
+        ),
+      );
+      return false;
+    }
+    return true;
+  }
+
   Future<void> downloadExtension(
     String publisher,
     String name,
     String version,
     String savePath,
   ) async {
+    if (!await checkLocationPermission(savePath)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'No write permission to the selected folder. Please choose another folder.',
+          ),
+        ),
+      );
+      return;
+    }
     downloadTask = DownloadTask(
       url:
           "https://$publisher.gallery.vsassets.io/_apis/public/gallery/publisher/$publisher/extension/$name/$version/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",

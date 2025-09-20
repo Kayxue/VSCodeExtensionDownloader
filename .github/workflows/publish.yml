@@ -1,0 +1,127 @@
+# This workflow automates the process of building a Flutter
+# desktop application for multiple platforms and architectures,
+# and then creates a new GitHub release with the built artifacts.
+
+name: Flutter Desktop Release
+
+on:
+  push:
+    # Trigger the workflow on pushes to the main branch
+    # or when a new tag is pushed.
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+  # Allows you to run this workflow manually from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }} on ${{ matrix.arch }}
+    
+    # Use a matrix strategy to run the same job on different OSes and architectures.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # macOS Universal Binary (x86_64 and arm64)
+          - os: macos-latest
+            platform: macos
+            arch: universal
+            
+          # Windows x64
+          - os: windows-latest
+            platform: windows
+            arch: x64
+            
+          # Linux x64
+          - os: ubuntu-latest
+            platform: linux
+            arch: x64
+            
+          # Linux ARM64 (using a dedicated runner)
+          - os: ubuntu-24.04-arm
+            platform: linux
+            arch: arm64
+    
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐦 Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          
+      - name: ⚙️ Install dependencies and enable desktop support
+        run: |
+          # Install dependencies required for the Linux build
+          if [ "${{ matrix.platform }}" == "linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y libgtk-3-dev liblzma-dev
+          fi
+          # Enable the correct desktop platform based on the runner OS.
+          flutter config --enable-${{ matrix.platform }}-desktop
+        shell: bash
+        
+      - name: ⬇️ Get dependencies
+        run: flutter pub get
+        
+      - name: 🛠️ Build for Release
+        run: |
+          # Build the Flutter app in release mode for the specified platform.
+          # The architecture is automatically handled by the runner.
+          if [ "${{ matrix.platform }}" == "linux" ]; then
+            flutter build linux --release --target-platform=linux-${{ matrix.arch }}
+          else
+            flutter build ${{ matrix.platform }} --release
+          fi
+        shell: bash
+        
+      - name: ⬆️ Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-${{ matrix.arch }}-build
+          path: build/${{ matrix.platform }}/
+          
+  create_release:
+    name: Create GitHub Release
+    # This job depends on the successful completion of the build job.
+    needs: [build]
+    
+    # This job only runs if the workflow was triggered by a tag push.
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: ⬇️ Download all artifacts
+        # Downloads all artifacts from the 'build' job.
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+      
+      - name: 📝 Create release notes
+        id: release_notes
+        run: |
+          echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          echo "name=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          echo "body=### What's new in this release" >> "$GITHUB_OUTPUT"
+          echo "body+=$(git log --pretty=format:'- %s' -n 1)" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🚀 Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/**/*
+          draft: false
+          prerelease: false
+          tag_name: ${{ steps.release_notes.outputs.tag }}
+          name: Release ${{ steps.release_notes.outputs.name }}
+          body: ${{ steps.release_notes.outputs.body }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

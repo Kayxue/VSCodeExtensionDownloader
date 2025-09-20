@@ -37,6 +37,7 @@ dependencies:
   file_picker: ^10.2.0
   background_downloader: ^9.2.3
   open_dir: ^0.0.2+1
+  folder_permission_checker: ^0.0.2
 
 dev_dependencies:
   flutter_test:
