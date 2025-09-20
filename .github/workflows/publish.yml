@@ -83,8 +83,8 @@ jobs:
         if: matrix.platform == 'macos'
         run: |
           mkdir dmgMake \
-          cp "build/macos/Build/Products/Release/${{ github.event.repository.name }}.app" dmgMake \
-          hdiutil create -volname "${{ github.event.repository.name }}" -ov -format UDRW -megabytes 500 ${{ github.event.repository.name }}.dmg
+          mv "build/macos/Build/Products/Release/${{ github.event.repository.name }}.app" dmgMake/ \
+          hdiutil create -volname "${{ github.event.repository.name }}" -fs HFS+ -srcfolder "dmgMake" -ov -format UDRW -megabytes 500 ${{ github.event.repository.name }}.dmg
         
       - name: ⬆️ Upload Artifacts for MacOS
         uses: actions/upload-artifact@v4
