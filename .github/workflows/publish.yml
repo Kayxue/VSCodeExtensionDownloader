@@ -104,7 +104,7 @@ jobs:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
           path: ${{ github.event.repository.name }}.zip
 
-      - name: Compress folder for Windows
+      - name: 📦 Compress folder for Windows
         if: matrix.platform == 'windows'
         run: |
           $source = "build/${{ matrix.platform }}/${{ matrix.arch }}/runner/Release/"
