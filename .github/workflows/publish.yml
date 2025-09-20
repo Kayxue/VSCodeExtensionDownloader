@@ -87,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: build/${{ matrix.platform }}/
+          path: build/
           
   create_release:
     name: Create GitHub Release
