@@ -82,19 +82,19 @@ jobs:
       - name: 📦 Create macOS dmg
         if: matrix.platform == 'macos'
         run: |
-          hdiutil create -volname "${{ github.event.repository.name }}" -fs HFS+ -srcfolder "build/macos/Build/Products/Release/VSCode Extension Downloader.app" -ov -format UDRW -megabytes 500 ${{ github.event.repository.name }}.dmg
+          hdiutil create -volname "${{ github.event.repository.name }}" -fs HFS+ -srcfolder "build/macos/Build/Products/Release/VSCode Extension Downloader.app" -ov -format UDRW -megabytes 500 "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.dmg"
         
       - name: ⬆️ Upload Artifacts for MacOS
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'macos'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: ${{ github.event.repository.name }}.dmg
+          path: $${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.dmg
       
       - name: 📦 Compress folder for Linux
         if: matrix.platform == 'linux'
         run: |
-          zip -r -9 ${{ github.event.repository.name }}.zip build/${{ matrix.platform }}/${{ matrix.arch }}/release/bundle/
+          zip -r -9 "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.zip" build/${{ matrix.platform }}/${{ matrix.arch }}/release/bundle/
         shell: bash
 
       - name: ⬆️ Upload Artifacts for Linux
@@ -102,13 +102,13 @@ jobs:
         if: matrix.platform == 'linux'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: ${{ github.event.repository.name }}.zip
+          path: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.zip
 
       - name: 📦 Compress folder for Windows
         if: matrix.platform == 'windows'
         run: |
           $source = "build/${{ matrix.platform }}/${{ matrix.arch }}/runner/Release/"
-          $destination = "${{ github.event.repository.name }}.zip"
+          $destination = "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.zip"
           Compress-Archive -Path $source -DestinationPath $destination
 
       - name: ⬆️ Upload Artifacts for Windows
@@ -116,7 +116,7 @@ jobs:
         if: matrix.platform == 'windows'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
-          path: ${{ github.event.repository.name }}.zip
+          path: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.zip
           
   create_release:
     name: Create GitHub Release
