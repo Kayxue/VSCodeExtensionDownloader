@@ -158,7 +158,7 @@ jobs:
           draft: false
           prerelease: false
           tag_name: ${{ steps.release_notes.outputs.tag }}
-          name: Release ${{ steps.release_notes.outputs.name }}
+          name: ${{ steps.release_notes.outputs.name }}
           body: ${{ steps.release_notes.outputs.body }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
