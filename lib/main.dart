@@ -116,18 +116,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<bool> checkLocationPermission(String path) async {
-    final readonly = await FolderPermissionChecker.isReadonly(path);
-    if (!mounted) return false;
-    if (readonly) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'No write permission to the selected folder. Please choose another folder.',
-          ),
-        ),
-      );
-      return false;
-    }
     final writable = await FolderPermissionChecker.isDirectoryWritable(path);
     if (!mounted) return false;
     if (!writable) {
