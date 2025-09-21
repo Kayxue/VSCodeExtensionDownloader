@@ -50,6 +50,7 @@ jobs:
 
       - name: 🐦 Set up Flutter (On ${{ matrix.os }})
         uses: subosito/flutter-action@v2
+        if : ${{ !(matrix.platform == 'linux' && matrix.arch == 'arm64') }}
         with:
           channel: 'stable'
           # flutter-version: stable
