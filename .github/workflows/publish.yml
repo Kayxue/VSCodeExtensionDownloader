@@ -48,28 +48,28 @@ jobs:
       - name: 📦 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🐦 Set up Flutter (On ${{ matrix.os }})
+      - name: 🐦 Set up Flutter (MacOS, Windows x64, Linux x64)
         uses: subosito/flutter-action@v2
         if : ${{ !(matrix.platform == 'linux' && matrix.arch == 'arm64') }}
         with:
           channel: 'stable'
           # flutter-version: stable
       
-      - name: Install dependencies from Apt (Linux ARM64)
+      - name: ⚙️ Install dependencies from Apt (Linux ARM64)
         if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
         run: |
           sudo apt-get update -y;
 
           sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa clang cmake ninja-build pkg-config libstdc++-12-dev
 
-      - name: Clone Flutter (Linux ARM64)
+      - name: ⬇️ Clone Flutter (Linux ARM64)
         if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
         run: |
           git clone --depth 1 --branch stable https://github.com/flutter/flutter.git $RUNNER_TEMP/flutter
 
           echo "$RUNNER_TEMP/flutter/bin" >> $GITHUB_PATH
 
-      - name: Install Flutter (Linux ARM64)
+      - name: ⚙️ Install Flutter (Linux ARM64)
         if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
         run: flutter doctor
           
