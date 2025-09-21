@@ -58,7 +58,7 @@ jobs:
       - name: Install dependencies from Apt (Linux ARM64)
         if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
         run: |
-          sudo apt-get update -y && sudo apt-get upgrade -y;
+          sudo apt-get update -y;
 
           sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa clang cmake ninja-build pkg-config libstdc++-12-dev
 
