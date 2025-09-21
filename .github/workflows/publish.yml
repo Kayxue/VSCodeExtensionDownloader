@@ -35,10 +35,10 @@ jobs:
             platform: linux
             arch: x64
             
-          # Linux ARM64 (using a dedicated runner)
-          # - os: ubuntu-24.04-arm
-          #   platform: linux
-          #   arch: arm64
+          Linux ARM64 (using a dedicated runner)
+          - os: ubuntu-24.04-arm
+            platform: linux
+            arch: arm64
     
     runs-on: ${{ matrix.os }}
     permissions:
@@ -48,11 +48,29 @@ jobs:
       - name: 📦 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🐦 Set up Flutter
+      - name: 🐦 Set up Flutter (On ${{ matrix.os }})
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           # flutter-version: stable
+      
+      - name: Install dependencies from Apt (Linux ARM64)
+        if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
+        run: |
+          sudo apt-get update -y && sudo apt-get upgrade -y;
+
+          sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa clang cmake ninja-build pkg-config libstdc++-12-dev
+
+      - name: Clone Flutter (Linux ARM64)
+        if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
+        run: |
+          git clone --depth 1 --branch stable https://github.com/flutter/flutter.git $RUNNER_TEMP/flutter
+
+          echo "$RUNNER_TEMP/flutter/bin" >> $GITHUB_PATH
+
+      - name: Install Flutter (Linux ARM64)
+        if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
+        run: flutter doctor
           
       - name: ⚙️ Install dependencies and enable desktop support
         run: |
