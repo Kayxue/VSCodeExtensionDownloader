@@ -37,6 +37,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late final TextEditingController _controller = TextEditingController();
+  late final TextEditingController publisherController =
+      TextEditingController();
+  late final TextEditingController nameController = TextEditingController();
+  String url = "";
   String publisher = "";
   String name = "";
   String version = "";
@@ -74,15 +78,33 @@ class _MyHomePageState extends State<MyHomePage> {
     ).then((value) => value ?? false);
   }
 
+  void setUrl(String value) {
+    setState(() {
+      url = value;
+    });
+  }
+
   void setPublisher(String value) {
     setState(() {
       publisher = value;
     });
   }
 
+  void setPublisherValue(String value) {
+    setState(() {
+      publisherController.text = value;
+    });
+  }
+
   void setName(String value) {
     setState(() {
       name = value;
+    });
+  }
+
+  void setNameValue(String value) {
+    setState(() {
+      nameController.text = value;
     });
   }
 
@@ -97,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return regex.hasMatch(version);
   }
 
-  void checkFields() {
+  bool checkFields() {
     if (publisher.isEmpty ||
         name.isEmpty ||
         version.isEmpty ||
@@ -105,14 +127,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Please fill in all fields.')));
-      return;
+      return false;
     }
     if (!validateVersion(version)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Invalid version format. Use x.x.x')),
       );
-      return;
+      return false;
     }
+    return true;
   }
 
   Future<bool> checkLocationPermission(String path) async {
@@ -212,13 +235,19 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Inputs(
               taskStatus: taskStatus,
+              url: url,
               publisher: publisher,
               name: name,
               version: version,
+              setUrl: setUrl,
               setPublisher: setPublisher,
               setName: setName,
               setVersion: setVersion,
               controller: _controller,
+              publisherController: publisherController,
+              nameController: nameController,
+              setNameValue: setNameValue,
+              setPublisherValue: setPublisherValue,
             ),
             const SizedBox(height: 24),
             Row(
@@ -228,7 +257,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: taskStatus == TaskStatus.running
                         ? null
                         : () async {
-                            checkFields();
+                            if (!checkFields()) {
+                              return;
+                            }
                             final confirmResult =
                                 await showDownloadConfirmationDialog(
                                   context,
