@@ -80,7 +80,7 @@ jobs:
       - name: ⬇️ Clone Flutter (Windows ARM64)
         if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
         run: |
-          git clone --depth 1 --branch 3.27.3 https://github.com/flutter/flutter.git $env:RUNNER_TEMP\flutter
+          git clone --depth 1 --branch stable https://github.com/flutter/flutter.git $env:RUNNER_TEMP\flutter
 
           Add-Content $env:GITHUB_PATH "$env:RUNNER_TEMP\flutter\bin"
       
