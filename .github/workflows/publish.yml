@@ -55,10 +55,9 @@ jobs:
 
       - name: 🐦 Set up Flutter (MacOS, Windows x64, Linux x64)
         uses: subosito/flutter-action@v2
-        if : ${{ !(matrix.platform == 'linux' && matrix.arch == 'arm64') }}
+        if : ${{ !(matrix.platform == 'linux' && matrix.arch == 'arm64') && !(matrix.platform == 'windows' && matrix.arch == 'arm64') }}
         with:
           channel: 'stable'
-          # flutter-version: stable
       
       - name: ⚙️ Install dependencies from Apt (Linux ARM64)
         if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
@@ -76,6 +75,18 @@ jobs:
 
       - name: ⚙️ Install Flutter (Linux ARM64)
         if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
+        run: flutter doctor
+      
+      - name: ⬇️ Clone Flutter (Windows ARM64)
+        if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
+        run: |
+          git clone --depth 1 --branch 3.27.3 https://github.com/flutter/flutter.git $env:RUNNER_TEMP\flutter
+
+          Add-Content $env:GITHUB_PATH "$env:RUNNER_TEMP\flutter\bin"
+      
+      - name: ⚙️ Install Flutter (Windows ARM64)
+        if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
+        # Running "flutter doctor" will download Flutter's dependencies
         run: flutter doctor
           
       - name: ⚙️ Install dependencies and enable desktop support
