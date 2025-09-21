@@ -113,16 +113,14 @@ jobs:
             flutter build ${{ matrix.platform }} --release
           fi
         shell: bash
-
-      - name: ⚙️ Install appdmg (macOS only)
-        if: matrix.platform == 'macos'
-        run: |
-          npm install -g appdmg
       
       - name: 📦 Create macOS dmg
         if: matrix.platform == 'macos'
         run: |
-          appdmg config.json "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.dmg"
+          mkdir tmp
+          cp -R build/macos/Build/Products/Release/VSCode\ Extension\ Downloader.app tmp/
+          ln -s /Applications tmp/Applications
+          hdiutil create -volname "${{ github.event.repository.name }}" -fs HFS+ -srcfolder "tmp" -ov -format UDZO "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.dmg"
         
       - name: ⬆️ Upload Artifacts for MacOS
         uses: actions/upload-artifact@v4
