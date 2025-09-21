@@ -41,9 +41,9 @@ jobs:
             arch: arm64
 
           # Windows ARM64 
-          - os: windows-11-arm
-            platform: windows
-            arch: arm64
+          # - os: windows-11-arm
+          #   platform: windows
+          #   arch: arm64
     
     runs-on: ${{ matrix.os }}
     permissions:
