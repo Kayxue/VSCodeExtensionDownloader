@@ -60,7 +60,7 @@ jobs:
         run: |
           sudo apt-get update -y;
 
-          sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa clang cmake ninja-build pkg-config libstdc++-12-dev
+          sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa clang cmake ninja-build pkg-config libstdc++-12-dev libgtk-3-dev liblzma-dev
 
       - name: ⬇️ Clone Flutter (Linux ARM64)
         if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
