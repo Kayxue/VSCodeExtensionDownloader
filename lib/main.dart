@@ -171,6 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
       );
       return;
     }
+    debugPrint("https://$publisher.gallery.vsassets.io/_apis/public/gallery/publisher/$publisher/extension/$name/$version/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage");
     downloadTask = DownloadTask(
       url:
           "https://$publisher.gallery.vsassets.io/_apis/public/gallery/publisher/$publisher/extension/$name/$version/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",

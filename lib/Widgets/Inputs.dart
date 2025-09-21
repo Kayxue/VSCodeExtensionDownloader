@@ -54,7 +54,7 @@ class Inputs extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             SizedBox(
-              width: 99,
+              width: 105,
               child: ElevatedButton(
                 onPressed: taskStatus == TaskStatus.running
                     ? null
@@ -83,64 +83,69 @@ class Inputs extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            ElevatedButton(
-              onPressed: taskStatus == TaskStatus.running
-                  ? null
-                  : () async {
-                      try {
-                        final uri = Uri.parse(url);
-                        if (!uri.isAbsolute ||
-                            uri.origin !=
-                                "https://marketplace.visualstudio.com") {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Seems that the link isn't from Visual Studio Marketplace",
+            SizedBox(
+              width: 105,
+              child: ElevatedButton(
+                onPressed: taskStatus == TaskStatus.running
+                    ? null
+                    : () async {
+                        try {
+                          final uri = Uri.parse(url);
+                          if (!uri.isAbsolute ||
+                              uri.origin !=
+                                  "https://marketplace.visualstudio.com") {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Seems that the link isn't from Visual Studio Marketplace",
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                            return;
+                          }
+                          if (!uri.queryParameters.containsKey("itemName")) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Can't analyze publisher and name from url",
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+                          final itemName = uri.queryParameters["itemName"]!;
+                          if (itemName.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Can't analyze publisher and name from url",
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+                          final info = itemName.split(".");
+                          if (info.length != 2 || info.contains("")) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Can't analyze publisher and name from url",
+                                ),
+                              ),
+                            );
+                            return;
+                          }
+                          final [pub, nam, ..._] = info;
+                          setPublisherValue(pub);
+                          setNameValue(nam);
+                          setPublisher(pub);
+                          setName(nam);
+                        } on FormatException {
                           return;
                         }
-                        if (!uri.queryParameters.containsKey("itemName")) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Can't analyze publisher and name from url",
-                              ),
-                            ),
-                          );
-                          return;
-                        }
-                        final itemName = uri.queryParameters["itemName"]!;
-                        if (itemName.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Can't analyze publisher and name from url",
-                              ),
-                            ),
-                          );
-                          return;
-                        }
-                        final info = itemName.split(".");
-                        if (info.length != 2 || info.contains("")) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Can't analyze publisher and name from url",
-                              ),
-                            ),
-                          );
-                          return;
-                        }
-                        final [pub, nam, ..._] = info;
-                        setPublisherValue(pub);
-                        setNameValue(nam);
-                      } on FormatException {
-                        return;
-                      }
-                    },
-              child: Text('Analyze'),
+                      },
+                child: Text('Analyze'),
+              ),
             ),
           ],
         ),
