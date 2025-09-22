@@ -19,7 +19,7 @@ Because download button of extensions on
 
 ![Version](./version.webp)
 
-Or paste link from Visual Studio Marketplace, and click `Analyze` button to analyze publisher and extension name, then fill in version by yourself
+Or paste link from Visual Studio Marketplace, and click `Analyze` button to analyze publisher and extension name from URL, then fill in version by yourself
 
 ![Analyze link](./link_analyze.png)
 
