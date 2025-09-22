@@ -7,7 +7,7 @@ A really simple application which can help you download extension from [Visual S
 Because download button of extensions on [Visual Studio Marketplace](https://marketplace.visualstudio.com/) is disappear, so I decide to make this application for easily downloading extensions from Visual Studio Marketplace;
 
 ## Screenshot
-![Screenshot](./screenshot.png)
+![Screenshot](./screenshot_new.png)
 
 ## Usage
 1. Choose where you want to save downloaded extension
