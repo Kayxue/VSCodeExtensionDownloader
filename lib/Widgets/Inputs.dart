@@ -141,6 +141,13 @@ class Inputs extends StatelessWidget {
                           setPublisher(pub);
                           setName(nam);
                         } on FormatException {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Seems that the link is not an URL",
+                                ),
+                              ),
+                            );
                           return;
                         }
                       },
