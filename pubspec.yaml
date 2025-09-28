@@ -38,6 +38,7 @@ dependencies:
   background_downloader: ^9.2.3
   open_dir: ^0.0.2+1
   folder_permission_checker: ^0.0.2
+  window_manager: ^0.5.1
 
 dev_dependencies:
   flutter_test:

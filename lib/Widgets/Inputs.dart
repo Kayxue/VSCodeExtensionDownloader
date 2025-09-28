@@ -60,7 +60,7 @@ class Inputs extends StatelessWidget {
                     ? null
                     : () async {
                         String? directory = await FilePicker.platform
-                            .getDirectoryPath();
+                            .getDirectoryPath(lockParentWindow: true);
                         if (directory != null) {
                           controller.text = directory;
                         }

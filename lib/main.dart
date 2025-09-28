@@ -1,12 +1,33 @@
+import 'dart:io';
+
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/material.dart';
 import 'package:open_dir/open_dir.dart';
 import 'package:vscode_extension_downloader/Widgets/Inputs.dart';
 import 'Widgets/DownloadStatus.dart';
 import 'package:folder_permission_checker/folder_permission_checker.dart';
+import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   FolderPermissionChecker.init();
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    WindowManager.instance.setMinimumSize(const Size(800, 600));
+  }
+
+  WindowOptions windowOptions = WindowOptions(
+    size: Size(800, 600),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+
   runApp(const MyApp());
 }
 
@@ -171,7 +192,6 @@ class _MyHomePageState extends State<MyHomePage> {
       );
       return;
     }
-    debugPrint("https://$publisher.gallery.vsassets.io/_apis/public/gallery/publisher/$publisher/extension/$name/$version/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage");
     downloadTask = DownloadTask(
       url:
           "https://$publisher.gallery.vsassets.io/_apis/public/gallery/publisher/$publisher/extension/$name/$version/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage",
