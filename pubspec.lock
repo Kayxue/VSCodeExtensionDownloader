@@ -29,10 +29,10 @@ packages:
     dependency: "direct main"
     description:
       name: background_downloader
-      sha256: efe41340f6518449f6c5f116d9bcecc97bbff7708efe47d7a645478117ce15fd
+      sha256: "2ea5322fe836c0aaf96aefd29ef1936771c71927f687cf18168dcc119666a45f"
       url: "https://pub.dev"
     source: hosted
-    version: "9.4.1"
+    version: "9.5.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -73,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.2"
+  code_assets:
+    dependency: transitive
+    description:
+      name: code_assets
+      sha256: ae0db647e668cbb295a3527f0938e4039e004c80099dce2f964102373f5ce0b5
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.10"
   collection:
     dependency: transitive
     description:
@@ -141,18 +149,26 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: "289279317b4b16eb2bb7e271abccd4bf84ec9bdcbe999e278a94b804f5630418"
+      sha256: d07d37192dbf97461359c1518788f203b0c9102cfd2c35a716b823741219542c
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
+  file:
+    dependency: transitive
+    description:
+      name: file
+      sha256: a3b4f84adafef897088c160faf7dfffb7696046cb13ae90b508c2cbc95d3b8d4
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.1"
   file_picker:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: "7872545770c277236fd32b022767576c562ba28366204ff1a5628853cf8f2200"
+      sha256: d974b6ba2606371ac71dd94254beefb6fa81185bde0b59bdc1df09885da85fde
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.7"
+    version: "10.3.8"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -208,6 +224,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.3.0"
+  glob:
+    dependency: transitive
+    description:
+      name: glob
+      sha256: c3f1ee72c96f8f78935e18aa8cecced9ab132419e8625dc187e1c2408efc20de
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.3"
+  hooks:
+    dependency: transitive
+    description:
+      name: hooks
+      sha256: "5410b9f4f6c9f01e8ff0eb81c9801ea13a3c3d39f8f0b1613cda08e27eab3c18"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.5"
   http:
     dependency: transitive
     description:
@@ -228,10 +260,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "51555e36056541237b15b57afc31a0f53d4f9aefd9bd00873a6dc0090e54e332"
+      sha256: "492bd52f6c4fbb6ee41f781ff27765ce5f627910e1e0cbecfa3d9add5562604c"
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.0"
+    version: "4.7.2"
   json_annotation:
     dependency: transitive
     description:
@@ -320,6 +352,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.16.12"
+  native_toolchain_c:
+    dependency: transitive
+    description:
+      name: native_toolchain_c
+      sha256: f8872ea6c7a50ce08db9ae280ca2b8efdd973157ce462826c82f3c3051d154ce
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.2"
+  objective_c:
+    dependency: transitive
+    description:
+      name: objective_c
+      sha256: "55eb67ede1002d9771b3f9264d2c9d30bc364f0267bc1c6cc0883280d5f0c7cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.2.2"
   open_dir:
     dependency: "direct main"
     description:
@@ -396,10 +444,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_foundation
-      sha256: "6d13aece7b3f5c5a9731eaf553ff9dcbc2eff41087fd2df587fd0fed9a3eb0c4"
+      sha256: "2a376b7d6392d80cd3705782d2caa734ca4727776db0b6ec36ef3f1855197699"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.1"
+    version: "2.6.0"
   path_provider_linux:
     dependency: transitive
     description:
@@ -630,5 +678,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.9.0 <4.0.0"
-  flutter: ">=3.35.0"
+  dart: ">=3.10.3 <4.0.0"
+  flutter: ">=3.38.4"
