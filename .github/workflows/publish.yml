@@ -153,7 +153,7 @@ jobs:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
           path: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.zip
 
-      - name: Decode Signing Certificate for Windows
+      - name: ⚙️ Decode Signing Certificate for Windows
         shell: powershell
         if: matrix.platform == 'windows'
         run: |
