@@ -145,6 +145,71 @@ jobs:
         
       - name: ⬇️ Get dependencies
         run: flutter pub get
+
+      - name: 🔧 Patch Cargokit for Windows ARM64
+        if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
+        shell: pwsh
+        run: |
+          Write-Host "=== Patching Cargokit to support Windows ARM64 ==="
+          
+          # Find the folder_permission_checker plugin
+          $pubCache = "$env:LOCALAPPDATA\Pub\Cache\hosted\pub.dev"
+          Write-Host "Searching in: $pubCache"
+          
+          $pluginPath = Get-ChildItem -Path $pubCache -Filter "folder_permission_checker-*" -Directory -ErrorAction SilentlyContinue | Select-Object -First 1
+          
+          if (-not $pluginPath) {
+            Write-Host "Error: folder_permission_checker plugin not found"
+            Write-Host "Available packages:"
+            Get-ChildItem -Path $pubCache -Directory | Select-Object -First 10 | ForEach-Object { Write-Host "  - $($_.Name)" }
+            exit 1
+          }
+          
+          Write-Host "Found plugin at: $($pluginPath.FullName)"
+          
+          # Patch target.dart first (defines platform-to-rust-target mapping)
+          $targetDartPath = Join-Path $pluginPath.FullName "cargokit\build_tool\lib\src\target.dart"
+          if (Test-Path $targetDartPath) {
+            Write-Host "`nPatching target.dart..."
+            $targetContent = Get-Content $targetDartPath -Raw
+            
+            # Check if already patched
+            if ($targetContent -notmatch "windows-arm64" -and $targetContent -notmatch "arm64.*aarch64-pc-windows-msvc") {
+              # Find the WindowsTarget section and add arm64
+              # Look for patterns like: WindowsTarget._('x64', 'x86_64-pc-windows-msvc')
+              if ($targetContent -match "WindowsTarget\._\('x64',\s*'x86_64-pc-windows-msvc'\)") {
+                $targetContent = $targetContent -replace "(WindowsTarget\._\('x64',\s*'x86_64-pc-windows-msvc'\))", "WindowsTarget._('arm64', 'aarch64-pc-windows-msvc'),`n  `$1"
+                Set-Content -Path $targetDartPath -Value $targetContent -NoNewline
+                Write-Host "✓ Successfully patched target.dart with arm64 support"
+              } else {
+                Write-Host "Warning: Could not find WindowsTarget pattern"
+              }
+            } else {
+              Write-Host "✓ target.dart already supports arm64"
+            }
+          }
+          
+          # Patch build_cmake.dart (handles platform string from CMake)
+          $buildCmakePath = Join-Path $pluginPath.FullName "cargokit\build_tool\lib\src\build_cmake.dart"
+          if (Test-Path $buildCmakePath) {
+            Write-Host "`nPatching build_cmake.dart..."
+            $content = Get-Content $buildCmakePath -Raw
+            
+            # Check if already patched
+            if ($content -notmatch "windows-arm64") {
+              # Add windows-arm64 case alongside windows-x64
+              $content = $content -replace "(\s+case\s+'windows-x64':)", "`$1`n      case 'windows-arm64':"
+              Set-Content -Path $buildCmakePath -Value $content -NoNewline
+              Write-Host "✓ Successfully patched build_cmake.dart for windows-arm64 platform"
+            } else {
+              Write-Host "✓ build_cmake.dart already supports windows-arm64"
+            }
+          } else {
+            Write-Host "Error: build_cmake.dart not found"
+            exit 1
+          }
+          
+          Write-Host "`n=== Cargokit patching complete ==="
         
       - name: 🛠️ Build for Release (Non-Windows-ARM64)
         if: ${{ !(matrix.platform == 'windows' && matrix.arch == 'arm64') }}
