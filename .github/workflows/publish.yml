@@ -167,7 +167,9 @@ jobs:
           dart run msix:create --build-windows false `
             --output-name "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}" `
             --architecture ${{ matrix.arch }} `
-            --install-certificate true
+            --certificate-path "cert.pfx" `
+            --certificate-password "${{ secrets.SIGNING_CERT_PASSWORD }}" `
+            --install-certificate false
 
       - name: ⬆️ Upload Artifacts for Windows
         uses: actions/upload-artifact@v4
