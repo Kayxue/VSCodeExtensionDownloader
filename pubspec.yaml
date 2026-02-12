@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.0.6
+version: 0.1.3
 
 environment:
   sdk: ^3.8.1
@@ -50,8 +50,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
-  msix: ^3.16.9
   dmg: ^0.1.6
+  msix: ^3.16.13
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -94,3 +94,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+msix_config:
+  display_name: VSCode Extension Downloader
+  publisher_display_name: KayXue
+  identity_name: com.kayxue.vscodeExtensionDownloader
+  msix_version: 0.2.0.0
+  capabilities: internetClient
+  enable_at_startup: false
