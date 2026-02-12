@@ -92,6 +92,13 @@ jobs:
           
           Write-Host "Adding Flutter to PATH..."
           Add-Content $env:GITHUB_PATH "$flutterDir\bin"
+
+      - name: Setup Rust (Windows ARM64)
+        if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: aarch64-pc-windows-msvc
       
       - name: ⚙️ Install Flutter (Windows ARM64)
         if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
