@@ -153,12 +153,14 @@ jobs:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
           path: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.zip
 
-      - name: ⚙️ Decode Signing Certificate for Windows
+      - name: Decode and Install Signing Certificate
         shell: powershell
-        if: matrix.platform == 'windows'
         run: |
           $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
           [IO.File]::WriteAllBytes("cert.pfx", $pfx_cert_byte)
+
+          $password = ConvertTo-SecureString -String "${{ secrets.SIGNING_CERT_PASSWORD }}" -AsPlainText -Force
+          Import-PfxCertificate -FilePath "cert.pfx" -CertStoreLocation Cert:\CurrentUser\My -Password $password
 
       - name: 📦 Create msix Installer for Windows
         shell: powershell
