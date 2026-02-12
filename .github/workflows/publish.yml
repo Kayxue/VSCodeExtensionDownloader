@@ -156,7 +156,7 @@ jobs:
       - name: 📦 Create msix Installer for Windows
         if: matrix.platform == 'windows'
         run: |
-          dart run msix:create --build-windows false --output_name "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}"
+          dart run msix:create --build-windows false --output_name "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}" --architecture ${{ matrix.arch }} 
 
       - name: ⬆️ Upload Artifacts for Windows
         uses: actions/upload-artifact@v4
