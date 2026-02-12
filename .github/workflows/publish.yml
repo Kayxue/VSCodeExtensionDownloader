@@ -155,6 +155,7 @@ jobs:
 
       - name: Decode and Install Signing Certificate
         shell: powershell
+        if: matrix.platform == 'windows'
         run: |
           $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
           [IO.File]::WriteAllBytes("cert.pfx", $pfx_cert_byte)
