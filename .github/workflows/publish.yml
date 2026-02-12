@@ -168,7 +168,7 @@ jobs:
             --output-name "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}" `
             --architecture ${{ matrix.arch }} `
             --certificate-path "cert.pfx" `
-            --certificate-password "${{ secrets.SIGNING_CERT_PASSWORD }}  
+            --certificate-password "${{ secrets.SIGNING_CERT_PASSWORD }}"
 
       - name: ⬆️ Upload Artifacts for Windows
         uses: actions/upload-artifact@v4
