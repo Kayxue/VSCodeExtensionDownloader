@@ -153,10 +153,22 @@ jobs:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
           path: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.zip
 
-      - name: 📦 Create msix Installer for Windows
+      - name: Decode Signing Certificate for Windows
+        shell: powershell
         if: matrix.platform == 'windows'
         run: |
-          dart run msix:create --build-windows false --output-name "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}" --architecture ${{ matrix.arch }} 
+          $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
+          [IO.File]::WriteAllBytes("cert.pfx", $pfx_cert_byte)
+
+      - name: 📦 Create msix Installer for Windows
+        shell: powershell
+        if: matrix.platform == 'windows'
+        run: |
+          dart run msix:create --build-windows false `
+            --output-name "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}" `
+            --architecture ${{ matrix.arch }} `
+            --certificate-path "cert.pfx" `
+            --certificate-password "${{ secrets.SIGNING_CERT_PASSWORD }}  
 
       - name: ⬆️ Upload Artifacts for Windows
         uses: actions/upload-artifact@v4
