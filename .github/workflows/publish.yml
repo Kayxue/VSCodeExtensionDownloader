@@ -41,9 +41,9 @@ jobs:
             arch: arm64
 
           # Windows ARM64 
-          # - os: windows-11-arm
-          #   platform: windows
-          #   arch: arm64
+          - os: windows-11-arm
+            platform: windows
+            arch: arm64
     
     runs-on: ${{ matrix.os }}
     permissions:
@@ -77,12 +77,21 @@ jobs:
         if: ${{ matrix.platform == 'linux' && matrix.arch == 'arm64' }}
         run: flutter doctor
       
-      - name: ⬇️ Clone Flutter (Windows ARM64)
+      - name: ⬇️ Download Flutter SDK (Windows ARM64)
         if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
         run: |
-          git clone --depth 1 --branch stable https://github.com/flutter/flutter.git $env:RUNNER_TEMP\flutter
-
-          Add-Content $env:GITHUB_PATH "$env:RUNNER_TEMP\flutter\bin"
+          $flutterUrl = "https://github.com/zhzhzhy/Flutter-SDK-ARM64/releases/download/Flutter-SDK-2026-02-11/Flutter-SDK-ARM64.zip"
+          $flutterZip = "$env:RUNNER_TEMP\flutter-sdk-arm64.zip"
+          $flutterDir = "$env:RUNNER_TEMP\flutter"
+          
+          Write-Host "Downloading Flutter SDK for Windows ARM64..."
+          Invoke-WebRequest -Uri $flutterUrl -OutFile $flutterZip
+          
+          Write-Host "Extracting Flutter SDK..."
+          Expand-Archive -Path $flutterZip -DestinationPath $env:RUNNER_TEMP -Force
+          
+          Write-Host "Adding Flutter to PATH..."
+          Add-Content $env:GITHUB_PATH "$flutterDir\bin"
       
       - name: ⚙️ Install Flutter (Windows ARM64)
         if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
