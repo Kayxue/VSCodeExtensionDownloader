@@ -212,10 +212,10 @@ packages:
     dependency: "direct main"
     description:
       name: folder_permission_checker
-      sha256: "1f90600d30762c50117045f58b17613c7f0ff12f8425a9539edf09dc436218c3"
+      sha256: "34a2b57a4ffcbdd41f2d25bb299483e0617504d04ea36426884262302cb472fd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   get_it:
     dependency: transitive
     description:
