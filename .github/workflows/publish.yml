@@ -104,6 +104,33 @@ jobs:
         if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
         # Running "flutter doctor" will download Flutter's dependencies
         run: flutter doctor
+
+      - name: ⚙️ Configure Rust for ARM64 (Windows ARM64)
+        if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
+        run: |
+          # Verify Rust installation
+          Write-Host "Verifying Rust installation..."
+          rustc --version
+          cargo --version
+          rustup show
+          
+          # Set Cargo build target to ARM64
+          Write-Host "Configuring Cargo for ARM64..."
+          echo "CARGO_BUILD_TARGET=aarch64-pc-windows-msvc" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          
+          # Ensure cargo is in PATH (persistent)
+          $cargoPath = "$env:USERPROFILE\.cargo\bin"
+          echo $cargoPath | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          
+          # Configure cargo to use ARM64 target by default
+          New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.cargo" | Out-Null
+          @"
+          [build]
+          target = "aarch64-pc-windows-msvc"
+          "@ | Out-File -FilePath "$env:USERPROFILE\.cargo\config.toml" -Encoding utf8
+          
+          Write-Host "Cargo configuration:"
+          Get-Content "$env:USERPROFILE\.cargo\config.toml"
           
       - name: ⚙️ Install dependencies and enable desktop support
         run: |
@@ -119,7 +146,8 @@ jobs:
       - name: ⬇️ Get dependencies
         run: flutter pub get
         
-      - name: 🛠️ Build for Release
+      - name: 🛠️ Build for Release (Non-Windows-ARM64)
+        if: ${{ !(matrix.platform == 'windows' && matrix.arch == 'arm64') }}
         run: |
           # Build the Flutter app in release mode for the specified platform.
           # The architecture is automatically handled by the runner.
@@ -129,6 +157,22 @@ jobs:
             flutter build ${{ matrix.platform }} --release
           fi
         shell: bash
+
+      - name: 🛠️ Build for Release (Windows ARM64)
+        if: ${{ matrix.platform == 'windows' && matrix.arch == 'arm64' }}
+        run: |
+          # Set environment for Rust compilation
+          $env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
+          
+          # Verify Rust is accessible
+          Write-Host "Verifying Rust accessibility..."
+          cargo --version
+          rustc --version
+          
+          # Build Flutter app for Windows with verbose output
+          Write-Host "Building Flutter app for Windows ARM64..."
+          flutter build windows --release --verbose
+        shell: pwsh
 
       - name: ⚙️ Install appdmg (MacOS)
         if: matrix.platform == 'macos'
