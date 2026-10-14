@@ -51,7 +51,7 @@ jobs:
 
     steps:
       - name: 📦 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 🐦 Set up Flutter (MacOS, Windows x64, Linux x64)
         uses: subosito/flutter-action@v2
@@ -134,7 +134,7 @@ jobs:
           appdmg config.json "${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}.dmg"
         
       - name: ⬆️ Upload Artifacts for MacOS
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: matrix.platform == 'macos'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
@@ -147,7 +147,7 @@ jobs:
         shell: bash
 
       - name: ⬆️ Upload Artifacts for Linux
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: matrix.platform == 'linux'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
@@ -172,7 +172,7 @@ jobs:
             --install-certificate false
 
       - name: ⬆️ Upload Artifacts for Windows
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: matrix.platform == 'windows'
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.platform }}-${{ matrix.arch }}
@@ -190,13 +190,13 @@ jobs:
     
     steps:
       - name: 📦 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0 
 
       - name: ⬇️ Download all artifacts
         # Downloads all artifacts from the 'build' job.
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: artifacts/
       
