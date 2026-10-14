@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  connectivity_plus
   open_dir_windows
   screen_retriever_windows
   window_manager
@@ -10,6 +11,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
   folder_permission_checker
+  jni
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
